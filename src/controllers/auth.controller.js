@@ -14,8 +14,8 @@ async function signup(req, res) {
   if (!name || !email || !password) {
     throw ApiError.badRequest('name, email and password are required');
   }
-  if (password.length < 8) {
-    throw ApiError.badRequest('password must be at least 8 characters');
+  if (password.length < 8 || password.length > 128) {
+    throw ApiError.badRequest('password must be between 8 and 128 characters');
   }
 
   const existing = await User.findOne({ email: email.toLowerCase() });
