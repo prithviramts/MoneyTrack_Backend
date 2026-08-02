@@ -5,13 +5,6 @@ const ApiError = require('../utils/ApiError');
 async function createAccount(req, res) {
   const { name, type, balance, creditLimit, billingCycleDate, dueDate } = req.body;
 
-  if (!name || !type) {
-    throw ApiError.badRequest('name and type are required');
-  }
-  if (!['debit', 'credit'].includes(type)) {
-    throw ApiError.badRequest("type must be 'debit' or 'credit'");
-  }
-
   const account = await Account.create({
     userId: req.user.id,
     name,

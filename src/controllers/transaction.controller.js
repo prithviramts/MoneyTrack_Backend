@@ -10,16 +10,6 @@ function balanceDelta(type, amount) {
 async function createTransaction(req, res) {
   const { accountId, type, amount, category, date } = req.body;
 
-  if (!accountId || !type || amount === undefined) {
-    throw ApiError.badRequest('accountId, type and amount are required');
-  }
-  if (!['income', 'expense'].includes(type)) {
-    throw ApiError.badRequest("type must be 'income' or 'expense'");
-  }
-  if (typeof amount !== 'number' || amount <= 0) {
-    throw ApiError.badRequest('amount must be a positive number');
-  }
-
   const session = await mongoose.startSession();
   try {
     let transaction;
@@ -84,13 +74,6 @@ async function getTransaction(req, res) {
 
 async function updateTransaction(req, res) {
   const { type, amount, category, date } = req.body;
-
-  if (type && !['income', 'expense'].includes(type)) {
-    throw ApiError.badRequest("type must be 'income' or 'expense'");
-  }
-  if (amount !== undefined && (typeof amount !== 'number' || amount <= 0)) {
-    throw ApiError.badRequest('amount must be a positive number');
-  }
 
   const session = await mongoose.startSession();
   try {

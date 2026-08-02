@@ -11,14 +11,7 @@ function issueTokens(userId) {
 async function signup(req, res) {
   const { name, email, password } = req.body;
 
-  if (!name || !email || !password) {
-    throw ApiError.badRequest('name, email and password are required');
-  }
-  if (password.length < 8 || password.length > 128) {
-    throw ApiError.badRequest('password must be between 8 and 128 characters');
-  }
-
-  const existing = await User.findOne({ email: email.toLowerCase() });
+  const existing = await User.findOne({ email });
   if (existing) {
     throw ApiError.conflict('Email already registered');
   }
@@ -35,11 +28,7 @@ async function signup(req, res) {
 async function login(req, res) {
   const { email, password } = req.body;
 
-  if (!email || !password) {
-    throw ApiError.badRequest('email and password are required');
-  }
-
-  const user = await User.findOne({ email: email.toLowerCase() }).select('+password');
+  const user = await User.findOne({ email }).select('+password');
   if (!user || !(await user.comparePassword(password))) {
     throw ApiError.unauthorized('Invalid email or password');
   }
@@ -54,9 +43,6 @@ async function login(req, res) {
 
 async function refresh(req, res) {
   const { refreshToken } = req.body;
-  if (!refreshToken) {
-    throw ApiError.badRequest('refreshToken is required');
-  }
 
   let payload;
   try {
